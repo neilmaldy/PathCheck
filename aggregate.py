@@ -68,7 +68,10 @@ class Lun:
             printToLog("Warning unexpected path count " + str(len(paths)) + " for " + self.name)
         self.paths = paths[:]
         for path in paths:
-            self.switch_ports.append(path.split('_')[1].split('.')[0])
+            if '_' in path and '.' in path.split('_')[1]:
+                self.switch_ports.append(path.split('_')[1].split('.')[0])
+            else:
+                raise ValueError('Unexpected path format, should be hostname_port.Lnnn, but found ' + path)
 
     def is_offline(self, down_ports):
         if down_ports:
