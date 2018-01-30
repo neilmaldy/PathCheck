@@ -141,7 +141,7 @@ class PathCheckObject:
                 plex = Plex(plex_name)
                 aggregate.add_plex(plex)
                 continue
-            if 'LUN' in line:
+            if 'data' in line and 'LUN' in line:
                 path = hostname + '_' + line.split()[1]
                 if path in path_to_lun:
                     if path_to_lun[path] not in plex.lun_names:

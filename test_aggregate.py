@@ -157,7 +157,6 @@ def test_aggregate_is_offline_true():
 def path_check_object():
     with open('testasups.txt') as fp:
         asup_lines = fp.read().splitlines()
-
     return PathCheckObject(asup_lines=asup_lines)
 
 
