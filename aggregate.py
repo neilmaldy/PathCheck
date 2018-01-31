@@ -156,16 +156,18 @@ class PathCheckObject:
                     printToLog(path)
                 continue
 
-        for aggregate in self.aggregates:
-            for plex in aggregate.plexes:
-                for lun in plex.luns:
-                    for path in lun.paths:
-                        printToLog(','.join(
-                            [aggregate.name, plex.name, lun.name, path, lun.name.split('_')[1], path.split('_')[1],
-                             path.split('_')[1].split('.')[0], '1']))
-                    else:
-                        printToLog(','.join(
-                            [aggregate.name, plex.name, lun.name, 'null', lun.name.split('_')[1], 'null', 'null', '-1']))
+        with open('path_check.csv', mode='w') as fp:
+            print >> fp, ('aggr,plex,hostlun,hostpath,lun,path,port,count')
+            for aggregate in self.aggregates:
+                for plex in aggregate.plexes:
+                    for lun in plex.luns:
+                        for path in lun.paths:
+                            print >> fp, (','.join(
+                                [aggregate.name, plex.name, lun.name, path, lun.name.split('_')[1], path.split('_')[1],
+                                 path.split('_')[1].split('.')[0], '1']))
+                        else:
+                            print >> fp, (','.join(
+                                [aggregate.name, plex.name, lun.name, 'null', lun.name.split('_')[1], 'null', 'null', '1']))
 
     def check(self, down_ports=None):
         offline_aggregates = []
