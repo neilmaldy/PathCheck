@@ -1,7 +1,6 @@
 from myLogging import printToLog
-from itertools import combinations
 
-debugit = 2
+debugit = 0
 
 
 class Aggregate:
@@ -163,7 +162,10 @@ class PathCheckObject:
                     for path in lun.paths:
                         printToLog(','.join(
                             [aggregate.name, plex.name, lun.name, path, lun.name.split('_')[1], path.split('_')[1],
-                             path.split('_')[1].split('.')[0]]))
+                             path.split('_')[1].split('.')[0], '1']))
+                    else:
+                        printToLog(','.join(
+                            [aggregate.name, plex.name, lun.name, 'null', lun.name.split('_')[1], 'null', 'null', '-1']))
 
     def check(self, down_ports=None):
         offline_aggregates = []
@@ -172,75 +174,19 @@ class PathCheckObject:
         for aggregate in self.aggregates:
             for plex in aggregate.plexes:
                 if plex.is_online(down_ports):
-                    printToLog(plex.name + ' plex is online')
+                    if debugit:
+                        printToLog(plex.name + ' plex is online')
                 else:
-                    printToLog(plex.name + ' plex is offline')
+                    if debugit:
+                        printToLog(plex.name + ' plex is offline')
                     offline_plexes.append(plex.name)
 
             if aggregate.is_offline(down_ports):
-                printToLog(aggregate.name + ' aggr is offline')
+                if debugit:
+                    printToLog(aggregate.name + ' aggr is offline')
                 offline_aggregates.append(aggregate.name)
             else:
-                printToLog(aggregate.name + ' aggr is online')
+                if debugit:
+                    printToLog(aggregate.name + ' aggr is online')
 
-        return (offline_aggregates, offline_plexes)
-
-        down_ports_combination = ['switch1:1', 'switch2:1']
-        printToLog('down_ports_combination=' + ' '.join(down_ports_combination))
-        for aggregate in self.aggregates:
-            for plex in aggregate.plexes:
-                if plex.is_online(down_ports_combination):
-                    printToLog(plex.name + ' plex is online')
-                else:
-                    printToLog(plex.name + ' plex is offline')
-
-            if aggregate.is_offline(down_ports_combination):
-                printToLog(aggregate.name + ' aggr is offline')
-            else:
-                printToLog(aggregate.name + ' aggr is online')
-
-        down_ports_combination = ["nys42ab11:24", "nys42ab11:22", "nys42ab11:23", "nys42ab11:25"]
-        printToLog('down_ports_combination=' + ' '.join(down_ports_combination))
-        for aggregate in self.aggregates:
-            for plex in aggregate.plexes:
-                if plex.is_online(down_ports_combination):
-                    printToLog(plex.name + ' plex is online')
-                else:
-                    printToLog(plex.name + ' plex is offline')
-
-            if aggregate.is_offline(down_ports_combination):
-                printToLog(aggregate.name + ' aggr is offline')
-            else:
-                printToLog(aggregate.name + ' aggr is online')
-
-        down_ports_combination = ["nys42bb1:24", "nys42bb1:23", "nys42bb1:25", "nys42bb1:22"]
-        printToLog('down_ports_combination=' + ' '.join(down_ports_combination))
-        for aggregate in self.aggregates:
-            for plex in aggregate.plexes:
-                if plex.is_online(down_ports_combination):
-                    printToLog(plex.name + ' plex is online')
-                else:
-                    printToLog(plex.name + ' plex is offline')
-
-            if aggregate.is_offline(down_ports_combination):
-                printToLog(aggregate.name + ' aggr is offline')
-            else:
-                printToLog(aggregate.name + ' aggr is online')
-
-        down_ports_combination = ["nys42bb1:24", "nys42bb1:23", "nys42bb1:25", "nys42bb1:22"]
-        printToLog('down_ports_combination=' + ' '.join(down_ports_combination))
-        for aggregate in self.aggregates:
-            for plex in aggregate.plexes:
-                if plex.is_online(down_ports_combination):
-                    printToLog(plex.name + ' plex is online')
-                else:
-                    printToLog(plex.name + ' plex is offline')
-
-            if aggregate.is_offline(down_ports_combination):
-                printToLog(aggregate.name + ' aggr is offline')
-            else:
-                printToLog(aggregate.name + ' aggr is online')
-
-        # printToLog('["' + '","'.join(ports) + '"]'
-
-
+        return offline_aggregates, offline_plexes
